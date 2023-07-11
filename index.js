@@ -389,9 +389,9 @@ function processURL(url, options) {
 	url = new URL(url);
 	let urlObj = {};
 
-	if (options.searchParams) {
+	if (Object.entries(options.searchParams).length !== 0) {
 		for (let key in options.searchParams) {
-			urlObj[key] = options.searchParams[key];
+			url.searchParams.append(key, options.searchParams[key]);
 		}
 	} else {
 		urlObj = url.searchParams;
@@ -404,7 +404,7 @@ function processURL(url, options) {
 		url.host = options.host;
 	}
 
-	return url.toString();
+	return url.href;
 
 }
 
@@ -442,9 +442,9 @@ function processUrl(url, options) {
 	url = new URL(url);
 	let urlObj = {};
 
-	if (options.searchParams) {
+	if (Object.entries(options.searchParams).length !== 0) {
 		for (let key in options.searchParams) {
-			urlObj[key] = options.searchParams[key];
+			url.searchParams.append(key, options.searchParams[key]);
 		}
 	} else {
 		urlObj = url.searchParams;
@@ -489,17 +489,16 @@ function manipulateQuery(url, options) {
 	// Видаляємо кожний ключ з об'єкта `searchParams` в URL.
 	// Повертаємо новий URL як рядок.
 	url = new URL(url);
-	if (options.append) {
-		for (let [key, value] of Object.entries(options.append)) {
+	if (options.has("append")) {
+		for (let [key, value] of options.get("append")) {
 			url.searchParams.append(key, value);
 		}
+	} if (options.has("delete")) {
+		for (let key of options.get("delete")) {
+			url.searchParams.delete(key);
+		}
 	}
-	// else if (options.delete) {
-	// 	for (let key of options.delete) {
-	// 		url.searchParams.delete(key);
-	// 	}
-	// } // Повертаємо об'єкт URL у вигляді рядка.
-	// return url.toString() + "?" + new URLSearchParams(urlObj).toString();
+	return url.href;
 }
 
 console.log("Завдання: 13 ==============================");
